@@ -1,0 +1,44 @@
+<div
+  class="weather-window-card card border shadow-sm h-100 text-center"
+  [ngStyle]="cardSurfaceStyle()"
+  [class.weather-window-card--extreme-hot]="themeForDay().extremeHot"
+  [class.weather-window-card--extreme-cold]="themeForDay().extremeCold"
+  [class.weather-window-card--house]="houseWindow()"
+>
+  <div class="card-body p-2 p-md-3 d-flex flex-column align-items-center gap-1 gap-md-2">
+    @if (houseWindow()) {
+      <span class="weather-window-card__mullions" aria-hidden="true"></span>
+    }
+    <time
+      class="small text-body-secondary text-uppercase fw-medium"
+      [attr.datetime]="day().dateUtc"
+    >
+      {{ day().dateUtc * 1000 | date: 'MM/dd/yy' : timezone() }}
+    </time>
+
+    <img
+      class="weather-window-card__icon"
+      [src]="day().iconUrl"
+      [alt]="day().description"
+      width="64"
+      height="64"
+      loading="lazy"
+    />
+
+    <p class="small text-capitalize mb-0 px-1">{{ day().description }}</p>
+
+    <div class="fw-semibold small">
+      <span class="text-danger">{{ day().tempMax | number: '1.0-0' }}°</span>
+      <span class="text-body-secondary"> / </span>
+      <span class="text-primary">{{ day().tempMin | number: '1.0-0' }}°</span>
+    </div>
+
+    <button
+      type="button"
+      class="btn btn-sm btn-outline-secondary mt-auto w-100"
+      (click)="openFeelsLike()"
+    >
+      Feels like
+    </button>
+  </div>
+</div>

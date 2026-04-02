@@ -1,0 +1,80 @@
+.weather-page {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+
+.weather-page__sky {
+  position: relative;
+  min-height: clamp(11rem, 32vw, 15rem);
+  padding-bottom: 0.35rem;
+}
+
+.weather-page__current {
+  position: relative;
+  z-index: 1;
+}
+
+.weather-house {
+  margin-top: 1.25rem;
+}
+
+.weather-house__roof {
+  height: 2.35rem;
+  margin-inline: clamp(0.5rem, 4vw, 2.5rem);
+  background: linear-gradient(180deg, #5c4033 0%, #2d1f18 100%);
+  clip-path: polygon(5% 100%, 50% 0, 95% 100%);
+  box-shadow: 0 3px 0 rgba(0, 0, 0, 0.12);
+}
+
+.weather-house__upper-trim {
+  height: 0.4rem;
+  margin-inline: clamp(0.35rem, 3vw, 1.75rem);
+  margin-top: -1px;
+  background: #1a1210;
+  border-radius: 2px;
+}
+
+.weather-house__facade {
+  padding: clamp(0.85rem, 2.4vw, 1.35rem);
+  border-radius: 0 0 0.55rem 0.55rem;
+  background: linear-gradient(
+    165deg,
+    color-mix(in srgb, var(--weather-page-bg-end, #c8d8ec) 28%, #4a3428),
+    color-mix(in srgb, var(--weather-page-bg-start, #e2ebf7) 22%, #35241c)
+  );
+  border: 3px solid #241814;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.07),
+    0 12px 28px rgba(0, 0, 0, 0.14);
+}
+
+.weather-house__title {
+  letter-spacing: 0.06em;
+  color: rgba(255, 255, 255, 0.92);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+}
+
+.weather-house__subtitle {
+  color: rgba(255, 255, 255, 0.78) !important;
+  text-shadow: 0 1px 1px rgba(0, 0, 0, 0.25);
+}
+
+.weather-house__foundation {
+  height: 0.7rem;
+  margin-top: 0.55rem;
+  margin-inline: clamp(0.85rem, 6vw, 3.25rem);
+  background: linear-gradient(180deg, #3d3330, #151010);
+  border-radius: 0.2rem;
+  box-shadow: 0 5px 12px rgba(0, 0, 0, 0.18);
+}
+
+@media (min-width: 768px) {
+  .weather-house {
+    margin-top: 1.75rem;
+  }
+
+  .weather-house__roof {
+    height: 2.75rem;
+  }
+}

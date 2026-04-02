@@ -1,0 +1,176 @@
+.sky-ambience {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+  z-index: 0;
+}
+
+.sky-ambience__clouds {
+  position: absolute;
+  inset: 0;
+}
+
+.sky-ambience__puff {
+  position: absolute;
+  top: var(--puff-top, 18%);
+  width: var(--puff-w, 4.5rem);
+  height: var(--puff-h, 2rem);
+  border-radius: 999px;
+  background: radial-gradient(
+    ellipse at 30% 40%,
+    rgba(255, 255, 255, 0.95),
+    rgba(255, 255, 255, 0.35) 55%,
+    transparent 72%
+  );
+  opacity: var(--puff-opacity, 0.22);
+  filter: blur(0.5px);
+  transform: translateX(120%);
+  will-change: transform, opacity;
+  animation: sky-ambience-drift linear infinite;
+}
+
+.sky-ambience__puff--a {
+  --puff-top: 12%;
+  --puff-w: 5.5rem;
+  --puff-h: 2.2rem;
+  animation-duration: 48s;
+  animation-delay: -6s;
+}
+
+.sky-ambience__puff--b {
+  --puff-top: 22%;
+  --puff-w: 4rem;
+  --puff-h: 1.6rem;
+  animation-duration: 62s;
+  animation-delay: -18s;
+}
+
+.sky-ambience__puff--c {
+  --puff-top: 34%;
+  --puff-w: 6.25rem;
+  --puff-h: 2.4rem;
+  animation-duration: 54s;
+  animation-delay: -28s;
+}
+
+.sky-ambience__puff--d {
+  --puff-top: 8%;
+  --puff-w: 3.5rem;
+  --puff-h: 1.4rem;
+  animation-duration: 70s;
+  animation-delay: -40s;
+}
+
+.sky-ambience__puff--e {
+  --puff-top: 42%;
+  --puff-w: 5rem;
+  --puff-h: 2rem;
+  animation-duration: 58s;
+  animation-delay: -12s;
+}
+
+.sky-ambience__puff--f {
+  --puff-top: 52%;
+  --puff-w: 4.25rem;
+  --puff-h: 1.75rem;
+  animation-duration: 66s;
+  animation-delay: -32s;
+}
+
+.sky-ambience--clouds-clear .sky-ambience__puff {
+  --puff-opacity: 0.08;
+}
+
+.sky-ambience--clouds-clear .sky-ambience__puff--c,
+.sky-ambience--clouds-clear .sky-ambience__puff--d,
+.sky-ambience--clouds-clear .sky-ambience__puff--e,
+.sky-ambience--clouds-clear .sky-ambience__puff--f {
+  display: none;
+}
+
+.sky-ambience--clouds-sparse .sky-ambience__puff {
+  --puff-opacity: 0.16;
+}
+
+.sky-ambience--clouds-sparse .sky-ambience__puff--e,
+.sky-ambience--clouds-sparse .sky-ambience__puff--f {
+  display: none;
+}
+
+.sky-ambience--clouds-moderate .sky-ambience__puff {
+  --puff-opacity: 0.26;
+}
+
+.sky-ambience--clouds-heavy .sky-ambience__puff {
+  --puff-opacity: 0.36;
+}
+
+.sky-ambience--clouds-overcast .sky-ambience__puff {
+  --puff-opacity: 0.48;
+}
+
+.sky-ambience__rain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.28;
+  background-image: repeating-linear-gradient(
+    102deg,
+    transparent,
+    transparent 5px,
+    rgba(255, 255, 255, 0.22) 5px,
+    rgba(255, 255, 255, 0.22) 6px
+  );
+  mix-blend-mode: soft-light;
+  animation: sky-ambience-rain linear infinite;
+}
+
+.sky-ambience__rain--light {
+  animation-duration: 1.15s;
+  opacity: 0.22;
+}
+
+.sky-ambience__rain--heavy {
+  animation-duration: 0.55s;
+  opacity: 0.42;
+  background-image: repeating-linear-gradient(
+    102deg,
+    transparent,
+    transparent 3px,
+    rgba(255, 255, 255, 0.32) 3px,
+    rgba(255, 255, 255, 0.32) 4px
+  );
+}
+
+@keyframes sky-ambience-drift {
+  from {
+    transform: translateX(110%) scale(1);
+  }
+
+  to {
+    transform: translateX(-130%) scale(1.03);
+  }
+}
+
+@keyframes sky-ambience-rain {
+  from {
+    background-position: 0 0;
+  }
+
+  to {
+    background-position: 0 28px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sky-ambience__puff {
+    animation: none !important;
+    transform: translateX(-8%) !important;
+    opacity: calc(var(--puff-opacity, 0.22) * 0.75) !important;
+  }
+
+  .sky-ambience__rain {
+    animation: none !important;
+    opacity: calc(var(--rain-static-opacity, 0.2)) !important;
+  }
+}

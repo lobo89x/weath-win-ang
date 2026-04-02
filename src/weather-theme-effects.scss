@@ -1,0 +1,97 @@
+/* Full-page accents for extreme temperatures; animations respect reduced motion. */
+
+html {
+  height: 100%;
+}
+
+body {
+  position: relative;
+  min-height: 100%;
+}
+
+app-root {
+  position: relative;
+  z-index: 1;
+  display: block;
+  min-height: 100%;
+}
+
+@keyframes weather-page-flame-glow {
+  from {
+    opacity: 0.42;
+    transform: scale(1);
+  }
+
+  to {
+    opacity: 0.78;
+    transform: scale(1.02);
+  }
+}
+
+@keyframes weather-page-snow-drift {
+  from {
+    background-position: 0 0, 20px 10px, -10px 30px;
+  }
+
+  to {
+    background-position: 0 24px, 20px 34px, -10px 54px;
+  }
+}
+
+body.weather-extreme-hot::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(ellipse 130% 85% at 50% 105%, rgba(255, 85, 0, 0.22), transparent 58%),
+    radial-gradient(ellipse 90% 60% at 20% 90%, rgba(255, 140, 0, 0.12), transparent 55%);
+  animation: weather-page-flame-glow 3.2s ease-in-out infinite alternate;
+}
+
+body.weather-extreme-cold::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background-color: rgba(120, 190, 255, 0.12);
+  background-image:
+    radial-gradient(circle at 12% 18%, rgba(255, 255, 255, 0.55) 0, transparent 2.5px),
+    radial-gradient(circle at 38% 42%, rgba(255, 255, 255, 0.45) 0, transparent 2px),
+    radial-gradient(circle at 72% 28%, rgba(255, 255, 255, 0.5) 0, transparent 2.5px),
+    radial-gradient(circle at 58% 68%, rgba(255, 255, 255, 0.4) 0, transparent 2px),
+    radial-gradient(circle at 88% 55%, rgba(255, 255, 255, 0.48) 0, transparent 2px);
+  background-size: auto, auto, auto, auto, auto;
+  background-repeat: repeat;
+  background-position:
+    0 0,
+    24px 12px,
+    48px 36px,
+    12px 60px,
+    60px 8px;
+  animation: weather-page-snow-drift 16s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  body.weather-extreme-hot::after,
+  body.weather-extreme-cold::after {
+    animation: none !important;
+  }
+
+  body.weather-extreme-hot::after {
+    opacity: 0.62;
+    transform: none;
+  }
+
+  body.weather-extreme-cold::after {
+    opacity: 0.38;
+    background-position:
+      0 0,
+      24px 12px,
+      48px 36px,
+      12px 60px,
+      60px 8px;
+  }
+}

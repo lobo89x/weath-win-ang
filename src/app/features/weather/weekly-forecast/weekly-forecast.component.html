@@ -1,0 +1,148 @@
+<section
+  class="weekly-forecast"
+  [class.mt-4]="variant() === 'default'"
+  aria-labelledby="weekly-forecast-heading"
+>
+  @if (variant() === 'default') {
+    <h2 id="weekly-forecast-heading" class="h5 text-body-secondary mb-3">7-day outlook</h2>
+  } @else {
+    <h2 id="weekly-forecast-heading" class="visually-hidden">Seven-day forecast windows</h2>
+  }
+
+  @if (loading() && !overview()) {
+    <div
+      class="weekly-forecast__skeleton"
+      [class.weekly-forecast__skeleton--house]="variant() === 'house'"
+      aria-hidden="true"
+    >
+      <div class="weekly-forecast__grid">
+        @for (slot of [1, 2, 3, 4, 5, 6, 7]; track slot) {
+          <div class="weekly-forecast__cell">
+            <div class="card border h-100 p-2 shadow-none">
+              <div class="placeholder-glow d-flex flex-column align-items-center gap-2 py-1">
+                <div class="placeholder col-9 mb-0 weekly-forecast__sk-line"></div>
+                <div class="placeholder rounded-circle weekly-forecast__sk-icon"></div>
+                <div class="placeholder col-11 weekly-forecast__sk-line"></div>
+                <div class="placeholder col-7 weekly-forecast__sk-line"></div>
+                <div class="placeholder col-10 weekly-forecast__sk-line"></div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+      <p class="small mt-2 mb-0" role="status">Loading forecast…</p>
+    </div>
+  } @else if (loadError() && !overview()) {
+    <div class="alert alert-danger mb-0" role="alert">
+      <div class="fw-semibold mb-1">We couldn’t load the forecast</div>
+      <p class="small mb-3">{{ loadError() }}</p>
+      <button type="button" class="btn btn-sm btn-danger" (click)="retry()">Try again</button>
+    </div>
+  } @else if (overview()) {
+    @if (dataNotice(); as note) {
+      <div class="alert alert-warning py-2 mb-3" role="status">
+        <span class="small">{{ note }}</span>
+        <div class="mt-2">
+          <button type="button" class="btn btn-sm btn-outline-dark" (click)="retry()">Refresh now</button>
+        </div>
+      </div>
+    }
+
+    @if (dailySeven().length === 0) {
+      <p class="text-body-secondary small mb-0">No daily forecast available.</p>
+    } @else {
+      <div class="weekly-forecast__grid">
+        @for (day of dailySeven(); track day.dateUtc) {
+          <div class="weekly-forecast__cell">
+            <app-weather-window-card
+              [day]="day"
+              [timezone]="timezone()"
+              [houseWindow]="variant() === 'house'"
+              (feelsLikeClick)="openDayDetail(day)"
+            />
+          </div>
+        }
+      </div>
+    }
+  }
+
+  @if (selectedDay(); as day) {
+    <div
+      class="modal fade show weekly-forecast__modal weather-window-modal d-flex align-items-center justify-content-center"
+      tabindex="-1"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'day-detail-title-' + day.dateUtc"
+      [class.weather-window-modal--extreme-hot]="modalExtremeHot()"
+      [class.weather-window-modal--extreme-cold]="modalExtremeCold()"
+      (click)="onBackdropClick($event)"
+    >
+      <div
+        class="modal-dialog modal-dialog-centered modal-dialog-scrollable m-2"
+        (click)="$event.stopPropagation()"
+      >
+        <div class="modal-content" [ngStyle]="modalWindowStyle()">
+          <div class="modal-header">
+            <h3 class="modal-title h5 mb-0" [id]="'day-detail-title-' + day.dateUtc">
+              {{ day.dateUtc * 1000 | date: 'MM/dd/yy' : timezone() }}
+            </h3>
+            <button
+              type="button"
+              class="btn-close"
+              aria-label="Close"
+              (click)="closeDayDetail()"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <div class="d-flex align-items-center gap-3 mb-3">
+              <img
+                [src]="day.iconUrl"
+                [alt]="day.description"
+                width="72"
+                height="72"
+                class="object-fit-contain"
+                loading="lazy"
+              />
+              <div>
+                <p class="text-capitalize fs-6 mb-1">{{ day.description }}</p>
+                <p class="small text-body-tertiary mb-0">{{ day.summary }}</p>
+              </div>
+            </div>
+
+            <dl class="row small mb-0 g-2">
+              <dt class="col-6 text-body-tertiary">High / low</dt>
+              <dd class="col-6 mb-0">
+                <span class="text-danger fw-medium">{{ day.tempMax | number: '1.0-0' }}°</span>
+                /
+                <span class="text-primary fw-medium">{{ day.tempMin | number: '1.0-0' }}°</span>
+              </dd>
+
+              <dt class="col-6 text-body-tertiary">Feels like (day)</dt>
+              <dd class="col-6 mb-0 fw-medium">{{ day.feelsLikeDay | number: '1.0-0' }}°</dd>
+
+              <dt class="col-6 text-body-tertiary">Precipitation chance</dt>
+              <dd class="col-6 mb-0">{{ modalPrecipPercent(day) }}</dd>
+
+              <dt class="col-6 text-body-tertiary">Humidity</dt>
+              <dd class="col-6 mb-0">{{ day.humidityPercent }}%</dd>
+
+              <dt class="col-6 text-body-tertiary">Wind</dt>
+              <dd class="col-6 mb-0">{{ day.windSpeed | number: '1.0-0' }}</dd>
+
+              <dt class="col-6 text-body-tertiary">UV index</dt>
+              <dd class="col-6 mb-0">{{ day.uvi | number: '1.0-1' }}</dd>
+            </dl>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" (click)="closeDayDetail()">Close</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div
+      class="modal-backdrop fade show weekly-forecast__backdrop"
+      aria-hidden="true"
+      (click)="closeDayDetail()"
+    ></div>
+  }
+</section>

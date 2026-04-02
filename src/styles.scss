@@ -1,0 +1,8 @@
+@use 'bootstrap/scss/bootstrap' as *;
+
+@use './weather-theme-effects.scss';
+@use './styles-weather-modal.scss';
+
+body {
+  margin: 0;
+}

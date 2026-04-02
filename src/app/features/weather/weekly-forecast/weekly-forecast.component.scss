@@ -1,0 +1,92 @@
+.weekly-forecast__grid {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 0.25rem;
+  scroll-snap-type: x proximity;
+  -webkit-overflow-scrolling: touch;
+}
+
+.weekly-forecast__cell {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+  width: min(42vw, 10rem);
+}
+
+@media (min-width: 768px) {
+  .weekly-forecast__grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    overflow: visible;
+    flex-wrap: unset;
+    scroll-snap-type: none;
+    padding-bottom: 0;
+  }
+
+  .weekly-forecast__cell {
+    width: auto;
+  }
+}
+
+@media (min-width: 992px) {
+  .weekly-forecast__grid {
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+  }
+}
+
+:host.weekly-forecast--house .text-body-secondary {
+  color: rgba(255, 255, 255, 0.78) !important;
+}
+
+:host.weekly-forecast--house .spinner-border {
+  --bs-spinner-color: rgba(255, 255, 255, 0.85);
+}
+
+.weekly-forecast__sk-icon {
+  width: 3.5rem;
+  height: 3.5rem;
+}
+
+.weekly-forecast__sk-line {
+  min-height: 0.65rem;
+}
+
+@media (min-width: 768px) {
+  .weekly-forecast__sk-icon {
+    width: 4rem;
+    height: 4rem;
+  }
+}
+
+.weekly-forecast__skeleton--house .placeholder {
+  background-color: rgba(255, 255, 255, 0.22) !important;
+}
+
+.weekly-forecast__skeleton--house .card {
+  background-color: rgba(0, 0, 0, 0.12);
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+:host.weekly-forecast--house .weekly-forecast__grid {
+  gap: 0.65rem;
+}
+
+@media (min-width: 768px) {
+  :host.weekly-forecast--house .weekly-forecast__grid {
+    gap: 0.75rem;
+  }
+}
+
+.weekly-forecast__modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1055;
+  overflow-y: auto;
+}
+
+.weekly-forecast__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1050;
+}

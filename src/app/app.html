@@ -1,0 +1,22 @@
+<div class="app-shell d-flex flex-column min-vh-100">
+  <header class="navbar navbar-expand navbar-dark bg-primary shadow-sm">
+    <div class="container">
+      <div class="navbar-brand mb-0 py-1">
+        <div class="fs-5 fs-md-4 fw-semibold lh-sm">Weather</div>
+        <div class="small fw-normal opacity-75 text-truncate city-shell__location-label">
+          {{ location().label }}
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-grow-1 py-3 py-md-4">
+    <div class="container">
+      <app-city-search
+        [selectedLocation]="location()"
+        (locationSelected)="onLocationSelected($event)"
+      />
+      <app-weather-page [lat]="location().lat" [lon]="location().lon" />
+    </div>
+  </main>
+</div>
