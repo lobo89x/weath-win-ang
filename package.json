@@ -10,7 +10,6 @@
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build"
   },
-  "homepage": "https://lobo89x.github.io/weath-win-ang",
   "private": true,
   "packageManager": "npm@11.12.0",
   "dependencies": {
