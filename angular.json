@@ -58,6 +58,9 @@
               "optimization": false,
               "extractLicenses": false,
               "sourceMap": true
+            },
+            "github-pages": {
+              "baseHref": "/weath-win-ang/"
             }
           },
           "defaultConfiguration": "production"
