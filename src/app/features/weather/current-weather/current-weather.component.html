@@ -1,78 +1,85 @@
 <section
-  class="current-weather card border-0 shadow-sm p-3 p-md-4"
+  class="current-weather current-weather--floating"
   aria-labelledby="current-weather-heading"
 >
-  <h2 id="current-weather-heading" class="h5 mb-3">Right now</h2>
+  <div class="current-weather__inner px-2 px-md-0 py-3 py-md-4 px-3 px-md-4">
+    <div class="d-flex flex-wrap align-items-center justify-content-between gap-2 mb-3">
+      <h2 id="current-weather-heading" class="h5 mb-0 current-weather__title">Right now</h2>
+      @if (ambience.visualTestActive()) {
+        <span class="badge rounded-pill text-bg-warning text-dark">Visual test (ambience)</span>
+      }
+    </div>
 
-  @if (loading() && !overview()) {
-    <div class="current-weather__skeleton" aria-hidden="true">
-      <div class="placeholder-glow row g-3 align-items-center">
+    @if (loading() && !overview()) {
+      <div class="current-weather__skeleton" aria-hidden="true">
+        <div class="placeholder-glow row g-3 align-items-center">
+          <div class="col-auto">
+            <div class="placeholder rounded-circle current-weather__sk-icon"></div>
+          </div>
+          <div class="col">
+            <p class="placeholder col-10 col-md-7 mb-2"></p>
+            <p class="placeholder col-6 col-md-4 mb-2"></p>
+            <p class="placeholder col-8 col-md-5 mb-0"></p>
+          </div>
+        </div>
+        <p class="small current-weather__muted mt-3 mb-0" role="status">Loading current conditions…</p>
+      </div>
+    } @else if (loadError() && !overview()) {
+      <div class="alert alert-danger mb-0 current-weather__alert-solid" role="alert">
+        <div class="fw-semibold mb-1">We couldn’t load weather</div>
+        <p class="small mb-3">{{ loadError() }}</p>
+        <button type="button" class="btn btn-sm btn-danger" (click)="retry()">Try again</button>
+      </div>
+    } @else if (overview(); as data) {
+      @if (dataNotice(); as note) {
+        <div class="alert alert-warning py-2 mb-3 current-weather__alert-solid" role="status">
+          <span class="small">{{ note }}</span>
+          <div class="mt-2">
+            <button type="button" class="btn btn-sm btn-outline-dark" (click)="retry()">Refresh now</button>
+          </div>
+        </div>
+      }
+
+      @if (officialAlerts().length > 0) {
+        <div class="mb-3 d-flex flex-column gap-2">
+          @for (alert of officialAlerts(); track alert.event + alert.startUtc) {
+            <div class="alert alert-warning mb-0 py-2 current-weather__alert-solid" role="alert">
+              <div class="fw-semibold">{{ alert.event }}</div>
+              @if (alert.senderName) {
+                <div class="small text-body-secondary">{{ alert.senderName }}</div>
+              }
+              <p class="small mb-0 mt-2 text-wrap">{{ alert.description }}</p>
+            </div>
+          }
+        </div>
+      } @else if (fallbackAdvisory(); as tip) {
+        <div class="alert alert-info mb-3 py-2 current-weather__alert-solid" role="status">
+          <span class="small">{{ tip }}</span>
+        </div>
+      }
+
+      <div class="current-weather__body row g-3 align-items-center">
         <div class="col-auto">
-          <div class="placeholder rounded-circle current-weather__sk-icon"></div>
+          <img
+            class="current-weather__icon"
+            [src]="data.current.iconUrl"
+            [alt]="data.current.description"
+            width="96"
+            height="96"
+            loading="lazy"
+          />
         </div>
         <div class="col">
-          <p class="placeholder col-10 col-md-7 mb-2"></p>
-          <p class="placeholder col-6 col-md-4 mb-2"></p>
-          <p class="placeholder col-8 col-md-5 mb-0"></p>
-        </div>
-      </div>
-      <p class="small text-body-secondary mt-3 mb-0" role="status">Loading current conditions…</p>
-    </div>
-  } @else if (loadError() && !overview()) {
-    <div class="alert alert-danger mb-0" role="alert">
-      <div class="fw-semibold mb-1">We couldn’t load weather</div>
-      <p class="small mb-3">{{ loadError() }}</p>
-      <button type="button" class="btn btn-sm btn-danger" (click)="retry()">Try again</button>
-    </div>
-  } @else if (overview(); as data) {
-    @if (dataNotice(); as note) {
-      <div class="alert alert-warning py-2 mb-3" role="status">
-        <span class="small">{{ note }}</span>
-        <div class="mt-2">
-          <button type="button" class="btn btn-sm btn-outline-dark" (click)="retry()">Refresh now</button>
-        </div>
-      </div>
-    }
-
-    @if (officialAlerts().length > 0) {
-      <div class="mb-3 d-flex flex-column gap-2">
-        @for (alert of officialAlerts(); track alert.event + alert.startUtc) {
-          <div class="alert alert-warning mb-0 py-2" role="alert">
-            <div class="fw-semibold">{{ alert.event }}</div>
-            @if (alert.senderName) {
-              <div class="small text-body-secondary">{{ alert.senderName }}</div>
-            }
-            <p class="small mb-0 mt-2 text-wrap">{{ alert.description }}</p>
+          <p class="text-capitalize fs-5 mb-1 current-weather__headline">{{ data.current.description }}</p>
+          <div class="d-flex flex-wrap align-items-baseline gap-2">
+            <span class="display-6 fw-semibold current-weather__temp">{{ data.current.temp | number: '1.0-0' }}°</span>
+            <span class="current-weather__muted">Feels like {{ data.current.feelsLike | number: '1.0-0' }}°</span>
           </div>
-        }
-      </div>
-    } @else if (fallbackAdvisory(); as tip) {
-      <div class="alert alert-info mb-3 py-2" role="status">
-        <span class="small">{{ tip }}</span>
+          <p class="small current-weather__muted mb-0 mt-2">
+            Chance of precipitation: <span class="current-weather__emphasis">{{ precipPercentLabel() }}</span>
+          </p>
+        </div>
       </div>
     }
-
-    <div class="row g-3 align-items-center">
-      <div class="col-auto">
-        <img
-          class="current-weather__icon"
-          [src]="data.current.iconUrl"
-          [alt]="data.current.description"
-          width="96"
-          height="96"
-          loading="lazy"
-        />
-      </div>
-      <div class="col">
-        <p class="text-capitalize fs-5 mb-1">{{ data.current.description }}</p>
-        <div class="d-flex flex-wrap align-items-baseline gap-2">
-          <span class="display-6 fw-semibold">{{ data.current.temp | number: '1.0-0' }}°</span>
-          <span class="text-body-secondary">Feels like {{ data.current.feelsLike | number: '1.0-0' }}°</span>
-        </div>
-        <p class="small text-body-secondary mb-0 mt-2">
-          Chance of precipitation: <span class="fw-medium text-body">{{ precipPercentLabel() }}</span>
-        </p>
-      </div>
-    </div>
-  }
+  </div>
 </section>

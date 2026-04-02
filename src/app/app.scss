@@ -1,18 +1,24 @@
 :host {
   display: block;
   min-height: 100dvh;
-  position: relative;
-  z-index: 1;
 }
 
+/* Full-viewport ambience sits behind chrome (header + main). Sky paints in the layer component. */
 .app-shell {
+  position: relative;
   min-height: 100dvh;
-  background: linear-gradient(
-    180deg,
-    var(--weather-page-bg-start, #e8f0fe),
-    var(--weather-page-bg-end, #f5f7fb)
-  );
-  transition: background 0.45s ease;
+  isolation: isolate;
+}
+
+.app-shell__chrome {
+  position: relative;
+  z-index: 1;
+  min-height: 100dvh;
+}
+
+.app-shell__main {
+  position: relative;
+  z-index: 1;
 }
 
 .city-shell__location-label {

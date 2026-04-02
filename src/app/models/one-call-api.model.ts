@@ -21,6 +21,9 @@ export interface OneCallCurrent {
   wind_speed: number;
   wind_deg: number;
   weather: OneCallWeatherCondition[];
+  /** mm in last hour, when present */
+  rain?: { '1h'?: number };
+  snow?: { '1h'?: number };
 }
 
 export interface OneCallDailyTemp {

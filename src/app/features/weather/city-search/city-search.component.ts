@@ -12,6 +12,7 @@ import { FormControl, ReactiveFormsModule } from '@angular/forms';
 import { FAVORITE_PLACES } from '../../../core/data/favorite-locations';
 import { GeocodingService } from '../../../core/services/geocoding.service';
 import { RecentLocationSearchesService } from '../../../core/services/recent-location-searches.service';
+import { WeatherAmbienceService } from '../../../core/services/weather-ambience.service';
 import type { CitySearchResult } from '../../../models/weather-ui.model';
 import type { SelectedLocation } from '../../../models/selected-location.model';
 import {
@@ -35,6 +36,7 @@ import {
 export class CitySearchComponent {
   private readonly geocoding = inject(GeocodingService);
   private readonly recentSearches = inject(RecentLocationSearchesService);
+  protected readonly ambience = inject(WeatherAmbienceService);
 
   /** Keeps the input label in sync when the parent location changes. */
   readonly selectedLocation = input<SelectedLocation | null>(null);
@@ -170,5 +172,29 @@ export class CitySearchComponent {
     this.searchControl.setValue(loc.label, { emitEvent: false });
     this.suggestions.set([]);
     this.locationSelected.emit(loc);
+  }
+
+  protected testCloudy(): void {
+    this.ambience.setVisualTestCloudy();
+  }
+
+  protected testLightRain(): void {
+    this.ambience.setVisualTestLightRain();
+  }
+
+  protected testHeavyRain(): void {
+    this.ambience.setVisualTestHeavyRain();
+  }
+
+  protected testClouds75(): void {
+    this.ambience.setVisualTestClouds75();
+  }
+
+  protected testClouds2(): void {
+    this.ambience.setVisualTestClouds2();
+  }
+
+  protected clearVisualTest(): void {
+    this.ambience.clearVisualTest();
   }
 }

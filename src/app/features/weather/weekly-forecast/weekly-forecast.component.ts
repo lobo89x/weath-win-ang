@@ -16,6 +16,10 @@ import {
 } from '@angular/core/rxjs-interop';
 import { catchError, distinctUntilChanged, finalize, of, switchMap, tap } from 'rxjs';
 import { WeatherOverviewCacheService } from '../../../core/services/weather-overview-cache.service';
+import {
+  resolveTemperatureTheme,
+  themeToWindowCssVars,
+} from '../../../core/utils/temperature-theme';
 import { WeatherApiError } from '../../../models/weather-api-error';
 import type {
   UiDailyForecast,
@@ -65,6 +69,28 @@ export class WeeklyForecastComponent {
   );
 
   protected readonly selectedDay = signal<UiDailyForecast | null>(null);
+
+  protected readonly modalDayTheme = computed(() => {
+    const day = this.selectedDay();
+    if (!day) {
+      return null;
+    }
+    const mid = (day.tempMin + day.tempMax) / 2;
+    return resolveTemperatureTheme(mid);
+  });
+
+  protected readonly modalWindowStyle = computed(() => {
+    const th = this.modalDayTheme();
+    return th ? themeToWindowCssVars(th) : {};
+  });
+
+  protected readonly modalExtremeHot = computed(
+    () => this.modalDayTheme()?.extremeHot ?? false,
+  );
+
+  protected readonly modalExtremeCold = computed(
+    () => this.modalDayTheme()?.extremeCold ?? false,
+  );
 
   constructor() {
     effect(() => {

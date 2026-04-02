@@ -1,5 +1,7 @@
 /** Normalized shapes for UI (mapper output). */
 
+export type RainIntensityLevel = 'none' | 'light' | 'heavy';
+
 export interface UiCurrentWeather {
   timestampUtc: number;
   temp: number;
@@ -12,7 +14,12 @@ export interface UiCurrentWeather {
   humidityPercent: number;
   windSpeed: number;
   windDeg: number;
+  /** 0–100 cloud coverage from One Call `current.clouds`. */
   cloudPercent: number;
+  /** Derived from `rain`/`snow` mm/h + condition `main`. */
+  rainLevel: RainIntensityLevel;
+  /** True when rain/snow is active or POP suggests meaningful precip. */
+  hasPrecipitationActive: boolean;
   uvi: number;
 }
 

@@ -38,6 +38,8 @@ const mockOverview: WeatherOverview = {
     windSpeed: 6,
     windDeg: 200,
     cloudPercent: 10,
+    rainLevel: 'none',
+    hasPrecipitationActive: false,
     uvi: 4,
   },
   daily: Array.from({ length: 8 }, (_, i) => mockDaily(i)),

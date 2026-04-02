@@ -1,6 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { booleanAttribute, Component, computed, input, output } from '@angular/core';
-import { resolveTemperatureTheme } from '../../../core/utils/temperature-theme';
+import {
+  resolveTemperatureTheme,
+  themeToWindowCssVars,
+} from '../../../core/utils/temperature-theme';
 import type { UiDailyForecast } from '../../../models/weather-ui.model';
 
 @Component({
@@ -26,15 +29,9 @@ export class WeatherWindowCardComponent {
     return resolveTemperatureTheme(mid);
   });
 
-  protected readonly cardSurfaceStyle = computed(() => {
-    const t = this.themeForDay();
-    return {
-      '--tw-card-bg-a': t.cardBgA,
-      '--tw-card-bg-b': t.cardBgB,
-      '--tw-card-border': t.cardBorder,
-      '--tw-card-accent': t.cardAccent,
-    };
-  });
+  protected readonly cardSurfaceStyle = computed(() =>
+    themeToWindowCssVars(this.themeForDay()),
+  );
 
   protected openFeelsLike(): void {
     this.feelsLikeClick.emit();

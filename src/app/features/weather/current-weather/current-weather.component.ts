@@ -14,6 +14,7 @@ import {
 } from '@angular/core/rxjs-interop';
 import { catchError, distinctUntilChanged, finalize, of, switchMap, tap } from 'rxjs';
 import { TemperatureThemeService } from '../../../core/services/temperature-theme.service';
+import { WeatherAmbienceService } from '../../../core/services/weather-ambience.service';
 import { WeatherOverviewCacheService } from '../../../core/services/weather-overview-cache.service';
 import { getFallbackWeatherAdvisory } from '../../../core/utils/weather-advisory';
 import { WeatherApiError } from '../../../models/weather-api-error';
@@ -29,6 +30,7 @@ import type { WeatherOverview } from '../../../models/weather-ui.model';
 export class CurrentWeatherComponent {
   private readonly overviewCache = inject(WeatherOverviewCacheService);
   private readonly temperatureTheme = inject(TemperatureThemeService);
+  protected readonly ambience = inject(WeatherAmbienceService);
 
   /** Location to load (parent supplies until city search exists). */
   readonly lat = input.required<number>();
@@ -76,7 +78,13 @@ export class CurrentWeatherComponent {
 
     effect(() => {
       const o = this.overview();
-      this.temperatureTheme.setPageAnchorTemp(o?.current.temp ?? null);
+      const active = this.ambience.visualTestActive();
+      const vt = this.ambience.visualTest();
+      if (active && vt) {
+        this.temperatureTheme.setPageAnchorTemp(vt.anchorTempF);
+      } else {
+        this.temperatureTheme.setPageAnchorTemp(o?.current.temp ?? null);
+      }
     });
 
     toObservable(this.requestKey)
@@ -96,6 +104,7 @@ export class CurrentWeatherComponent {
               next: (data) => {
                 this.overview.set(data);
                 this.dataNotice.set(null);
+                this.ambience.applyLiveFromCurrent(data.current);
               },
             }),
             catchError((err: unknown) => {
@@ -106,6 +115,7 @@ export class CurrentWeatherComponent {
               const stale = this.overviewCache.peekStale(lat, lon);
               if (stale) {
                 this.overview.set(stale.data);
+                this.ambience.applyLiveFromCurrent(stale.data.current);
                 this.dataNotice.set(
                   `${msg} Showing saved conditions from your last successful load. Try again, or check your API key in src/environments/environment.ts.`,
                 );
