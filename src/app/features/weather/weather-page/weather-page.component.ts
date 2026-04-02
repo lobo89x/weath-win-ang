@@ -2,18 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, computed, inject, input } from '@angular/core';
 import { WeatherOverviewCacheService } from '../../../core/services/weather-overview-cache.service';
 import { CurrentWeatherComponent } from '../current-weather/current-weather.component';
-import { SkyAmbienceLayerComponent } from '../sky-ambience-layer/sky-ambience-layer.component';
 import { WeeklyForecastComponent } from '../weekly-forecast/weekly-forecast.component';
 
 @Component({
   selector: 'app-weather-page',
   standalone: true,
-  imports: [
-    CommonModule,
-    CurrentWeatherComponent,
-    SkyAmbienceLayerComponent,
-    WeeklyForecastComponent,
-  ],
+  imports: [CommonModule, CurrentWeatherComponent, WeeklyForecastComponent],
   templateUrl: './weather-page.component.html',
   styleUrl: './weather-page.component.scss',
 })

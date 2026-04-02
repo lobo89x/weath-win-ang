@@ -1,6 +1,5 @@
 .weather-window-card {
   --tw-card-bg-a: #f8f9fa;
-  --tw-card-bg-c: #e9ecef;
   --tw-card-bg-b: #ffffff;
   --tw-card-border: rgba(0, 0, 0, 0.08);
   --tw-card-accent: #0d6efd;
@@ -11,7 +10,6 @@
   background: linear-gradient(
     155deg,
     var(--tw-card-bg-a),
-    var(--tw-card-bg-c) 46%,
     var(--tw-card-bg-b)
   );
   border-color: var(--tw-card-border) !important;

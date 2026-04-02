@@ -1,10 +1,5 @@
 <div class="weather-page">
-  <div class="weather-page__sky">
-    <app-sky-ambience-layer />
-    <div class="weather-page__current">
-      <app-current-weather [lat]="lat()" [lon]="lon()" />
-    </div>
-  </div>
+  <app-current-weather [lat]="lat()" [lon]="lon()" />
 
   <section class="weather-house" aria-labelledby="weather-house-heading">
     <div class="weather-house__roof" aria-hidden="true"></div>

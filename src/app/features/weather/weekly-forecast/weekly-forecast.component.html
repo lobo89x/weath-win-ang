@@ -68,20 +68,18 @@
 
   @if (selectedDay(); as day) {
     <div
-      class="modal fade show weekly-forecast__modal weather-window-modal d-flex align-items-center justify-content-center"
+      class="modal fade show weekly-forecast__modal d-flex align-items-center justify-content-center"
       tabindex="-1"
       role="dialog"
       aria-modal="true"
       [attr.aria-labelledby]="'day-detail-title-' + day.dateUtc"
-      [class.weather-window-modal--extreme-hot]="modalExtremeHot()"
-      [class.weather-window-modal--extreme-cold]="modalExtremeCold()"
       (click)="onBackdropClick($event)"
     >
       <div
         class="modal-dialog modal-dialog-centered modal-dialog-scrollable m-2"
         (click)="$event.stopPropagation()"
       >
-        <div class="modal-content" [ngStyle]="modalWindowStyle()">
+        <div class="modal-content">
           <div class="modal-header">
             <h3 class="modal-title h5 mb-0" [id]="'day-detail-title-' + day.dateUtc">
               {{ day.dateUtc * 1000 | date: 'MM/dd/yy' : timezone() }}
@@ -105,7 +103,7 @@
               />
               <div>
                 <p class="text-capitalize fs-6 mb-1">{{ day.description }}</p>
-                <p class="small text-body-tertiary mb-0">{{ day.summary }}</p>
+                <p class="small text-body-secondary mb-0">{{ day.summary }}</p>
               </div>
             </div>
 
@@ -117,19 +115,19 @@
                 <span class="text-primary fw-medium">{{ day.tempMin | number: '1.0-0' }}°</span>
               </dd>
 
-              <dt class="col-6 text-body-tertiary">Feels like (day)</dt>
+              <dt class="col-6 text-body-secondary">Feels like (day)</dt>
               <dd class="col-6 mb-0 fw-medium">{{ day.feelsLikeDay | number: '1.0-0' }}°</dd>
 
-              <dt class="col-6 text-body-tertiary">Precipitation chance</dt>
+              <dt class="col-6 text-body-secondary">Precipitation chance</dt>
               <dd class="col-6 mb-0">{{ modalPrecipPercent(day) }}</dd>
 
-              <dt class="col-6 text-body-tertiary">Humidity</dt>
+              <dt class="col-6 text-body-secondary">Humidity</dt>
               <dd class="col-6 mb-0">{{ day.humidityPercent }}%</dd>
 
-              <dt class="col-6 text-body-tertiary">Wind</dt>
+              <dt class="col-6 text-body-secondary">Wind</dt>
               <dd class="col-6 mb-0">{{ day.windSpeed | number: '1.0-0' }}</dd>
 
-              <dt class="col-6 text-body-tertiary">UV index</dt>
+              <dt class="col-6 text-body-secondary">UV index</dt>
               <dd class="col-6 mb-0">{{ day.uvi | number: '1.0-1' }}</dd>
             </dl>
           </div>

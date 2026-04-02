@@ -1,6 +1,5 @@
-import type { OneCallCurrent, OneCallApiResponse } from '../../models/one-call-api.model';
+import type { OneCallApiResponse } from '../../models/one-call-api.model';
 import type {
-  RainIntensityLevel,
   UiCurrentWeather,
   UiDailyForecast,
   UiWeatherAlert,
@@ -21,24 +20,6 @@ function primaryCondition(weather: { description: string; icon: string }[]): {
   };
 }
 
-function deriveRainLevel(current: OneCallCurrent): RainIntensityLevel {
-  const main = (current.weather[0]?.main ?? '').toLowerCase();
-  const rainMm = current.rain?.['1h'] ?? 0;
-  const snowMm = current.snow?.['1h'] ?? 0;
-  const mm = rainMm + snowMm;
-
-  if (main === 'thunderstorm' || mm >= 2.5) {
-    return 'heavy';
-  }
-  if (mm >= 0.15) {
-    return mm >= 1 ? 'heavy' : 'light';
-  }
-  if (main === 'drizzle' || main === 'rain') {
-    return 'light';
-  }
-  return 'none';
-}
-
 function currentPrecipProbability(
   hourly: OneCallApiResponse['hourly'],
   daily: OneCallApiResponse['daily'],
@@ -56,11 +37,6 @@ function currentPrecipProbability(
 
 export function mapOneCallToOverview(res: OneCallApiResponse): WeatherOverview {
   const { description, icon } = primaryCondition(res.current.weather);
-  const precipProb = currentPrecipProbability(res.hourly, res.daily);
-  const rainLevel = deriveRainLevel(res.current);
-  const hasPrecipitationActive =
-    rainLevel !== 'none' ||
-    (typeof precipProb === 'number' && precipProb >= 0.15);
 
   const current: UiCurrentWeather = {
     timestampUtc: res.current.dt,
@@ -69,13 +45,11 @@ export function mapOneCallToOverview(res: OneCallApiResponse): WeatherOverview {
     description,
     iconCode: icon,
     iconUrl: ICON_URL(icon),
-    precipitationProbability: precipProb,
+    precipitationProbability: currentPrecipProbability(res.hourly, res.daily),
     humidityPercent: res.current.humidity,
     windSpeed: res.current.wind_speed,
     windDeg: res.current.wind_deg,
     cloudPercent: res.current.clouds,
-    rainLevel,
-    hasPrecipitationActive,
     uvi: res.current.uvi,
   };
 
