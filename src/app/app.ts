@@ -1,11 +1,12 @@
 import { Component, signal } from '@angular/core';
 import { CitySearchComponent } from './features/weather/city-search/city-search.component';
+import { SkyAmbienceLayerComponent } from './features/weather/sky-ambience-layer/sky-ambience-layer.component';
 import { WeatherPageComponent } from './features/weather/weather-page/weather-page.component';
 import type { SelectedLocation } from './models/selected-location.model';
 
 @Component({
   selector: 'app-root',
-  imports: [CitySearchComponent, WeatherPageComponent],
+  imports: [CitySearchComponent, SkyAmbienceLayerComponent, WeatherPageComponent],
   templateUrl: './app.html',
   styleUrl: './app.scss',
 })

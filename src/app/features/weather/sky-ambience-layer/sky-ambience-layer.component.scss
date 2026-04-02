@@ -1,154 +1,297 @@
+/* Full-viewport backdrop: sky → haze → clouds → rim → rain. App chrome stacks above (z-index). */
+
+:host {
+  display: block;
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+}
+
 .sky-ambience {
   position: absolute;
   inset: 0;
   overflow: hidden;
   pointer-events: none;
   z-index: 0;
+  isolation: isolate;
+}
+
+/* Layer stack (low → high) */
+.sky-ambience__sky {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  background: linear-gradient(
+    168deg,
+    var(--weather-page-bg-start, #9ecfff) 0%,
+    var(--weather-page-bg-end, #d4e9ff) 42%,
+    color-mix(in srgb, var(--weather-page-bg-end, #cfe8ff) 65%, #87b8e8) 100%
+  );
+}
+
+.sky-ambience__haze {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: linear-gradient(
+    180deg,
+    transparent 0%,
+    transparent 42%,
+    rgba(255, 255, 255, 0.18) 72%,
+    rgba(240, 248, 255, 0.35) 100%
+  );
+  pointer-events: none;
+}
+
+.sky-ambience__overcast {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  background: linear-gradient(
+    185deg,
+    rgba(75, 90, 110, 0) 0%,
+    rgba(95, 108, 128, 0.22) 55%,
+    rgba(72, 82, 98, 0.38) 100%
+  );
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  pointer-events: none;
+}
+
+.sky-ambience--clouds-heavy .sky-ambience__overcast,
+.sky-ambience--clouds-overcast .sky-ambience__overcast {
+  opacity: 1;
+}
+
+.sky-ambience--clouds-moderate .sky-ambience__overcast {
+  opacity: 0.45;
 }
 
 .sky-ambience__clouds {
   position: absolute;
-  inset: 0;
+  inset: -8% -5%;
+  z-index: 3;
+}
+
+.sky-ambience__clouds--back {
+  z-index: 3;
+}
+
+.sky-ambience__clouds--front {
+  z-index: 4;
 }
 
 .sky-ambience__puff {
   position: absolute;
+  left: 0;
   top: var(--puff-top, 18%);
-  width: var(--puff-w, 4.5rem);
-  height: var(--puff-h, 2rem);
+  width: var(--puff-w, 6rem);
+  height: var(--puff-h, 2.6rem);
   border-radius: 999px;
+  transform-origin: left center;
   background: radial-gradient(
-    ellipse at 30% 40%,
-    rgba(255, 255, 255, 0.95),
-    rgba(255, 255, 255, 0.35) 55%,
-    transparent 72%
+    ellipse 120% 100% at 28% 42%,
+    rgba(255, 255, 255, 0.98),
+    rgba(255, 255, 255, 0.72) 38%,
+    rgba(245, 250, 255, 0.45) 58%,
+    rgba(200, 215, 235, 0.2) 78%,
+    transparent 92%
   );
-  opacity: var(--puff-opacity, 0.22);
-  filter: blur(0.5px);
-  transform: translateX(120%);
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, 0.25),
+    0 12px 28px rgba(40, 70, 110, 0.12);
+  opacity: var(--puff-opacity, 0.42);
+  filter: blur(0.35px);
   will-change: transform, opacity;
   animation: sky-ambience-drift linear infinite;
 }
 
+/* Back layer: smaller, softer */
+.sky-ambience__clouds--back {
+  transform: scale(0.92);
+  transform-origin: center 40%;
+}
+
+.sky-ambience__clouds--back .sky-ambience__puff {
+  filter: blur(1.1px);
+}
+
 .sky-ambience__puff--a {
-  --puff-top: 12%;
-  --puff-w: 5.5rem;
-  --puff-h: 2.2rem;
-  animation-duration: 48s;
-  animation-delay: -6s;
+  --puff-top: 10%;
+  --puff-w: 7.5rem;
+  --puff-h: 2.8rem;
+  animation-duration: 56s;
+  animation-delay: -4s;
 }
 
 .sky-ambience__puff--b {
-  --puff-top: 22%;
-  --puff-w: 4rem;
-  --puff-h: 1.6rem;
-  animation-duration: 62s;
-  animation-delay: -18s;
+  --puff-top: 24%;
+  --puff-w: 5.5rem;
+  --puff-h: 2rem;
+  animation-duration: 72s;
+  animation-delay: -22s;
 }
 
 .sky-ambience__puff--c {
-  --puff-top: 34%;
-  --puff-w: 6.25rem;
-  --puff-h: 2.4rem;
-  animation-duration: 54s;
-  animation-delay: -28s;
+  --puff-top: 38%;
+  --puff-w: 8.5rem;
+  --puff-h: 3.1rem;
+  animation-duration: 64s;
+  animation-delay: -38s;
 }
 
 .sky-ambience__puff--d {
-  --puff-top: 8%;
-  --puff-w: 3.5rem;
-  --puff-h: 1.4rem;
-  animation-duration: 70s;
-  animation-delay: -40s;
-}
-
-.sky-ambience__puff--e {
-  --puff-top: 42%;
-  --puff-w: 5rem;
-  --puff-h: 2rem;
-  animation-duration: 58s;
+  --puff-top: 6%;
+  --puff-w: 4.8rem;
+  --puff-h: 1.85rem;
+  animation-duration: 80s;
   animation-delay: -12s;
 }
 
+/* Front layer: larger, quicker */
+.sky-ambience__clouds--front .sky-ambience__puff {
+  filter: blur(0.25px);
+}
+
+.sky-ambience__puff--e {
+  --puff-top: 16%;
+  --puff-w: 10rem;
+  --puff-h: 3.6rem;
+  animation-duration: 38s;
+  animation-delay: -8s;
+}
+
 .sky-ambience__puff--f {
-  --puff-top: 52%;
-  --puff-w: 4.25rem;
-  --puff-h: 1.75rem;
-  animation-duration: 66s;
-  animation-delay: -32s;
+  --puff-top: 44%;
+  --puff-w: 8.25rem;
+  --puff-h: 3rem;
+  animation-duration: 44s;
+  animation-delay: -26s;
 }
 
+.sky-ambience__puff--g {
+  --puff-top: 58%;
+  --puff-w: 9.5rem;
+  --puff-h: 3.2rem;
+  animation-duration: 34s;
+  animation-delay: -14s;
+}
+
+.sky-ambience__puff--h {
+  --puff-top: 28%;
+  --puff-w: 6.75rem;
+  --puff-h: 2.4rem;
+  animation-duration: 50s;
+  animation-delay: -33s;
+}
+
+/* Density bands — bias strong so the scene reads at a glance */
 .sky-ambience--clouds-clear .sky-ambience__puff {
-  --puff-opacity: 0.08;
-}
-
-.sky-ambience--clouds-clear .sky-ambience__puff--c,
-.sky-ambience--clouds-clear .sky-ambience__puff--d,
-.sky-ambience--clouds-clear .sky-ambience__puff--e,
-.sky-ambience--clouds-clear .sky-ambience__puff--f {
-  display: none;
-}
-
-.sky-ambience--clouds-sparse .sky-ambience__puff {
-  --puff-opacity: 0.16;
-}
-
-.sky-ambience--clouds-sparse .sky-ambience__puff--e,
-.sky-ambience--clouds-sparse .sky-ambience__puff--f {
-  display: none;
-}
-
-.sky-ambience--clouds-moderate .sky-ambience__puff {
   --puff-opacity: 0.26;
 }
 
+.sky-ambience--clouds-clear .sky-ambience__clouds--front .sky-ambience__puff--g,
+.sky-ambience--clouds-clear .sky-ambience__clouds--front .sky-ambience__puff--h {
+  opacity: calc(var(--puff-opacity, 0.26) * 0.65);
+}
+
+.sky-ambience--clouds-sparse .sky-ambience__puff {
+  --puff-opacity: 0.4;
+}
+
+.sky-ambience--clouds-sparse .sky-ambience__puff--d,
+.sky-ambience--clouds-sparse .sky-ambience__puff--h {
+  opacity: calc(var(--puff-opacity, 0.4) * 0.75);
+}
+
+.sky-ambience--clouds-moderate .sky-ambience__puff {
+  --puff-opacity: 0.55;
+}
+
 .sky-ambience--clouds-heavy .sky-ambience__puff {
-  --puff-opacity: 0.36;
+  --puff-opacity: 0.68;
 }
 
 .sky-ambience--clouds-overcast .sky-ambience__puff {
-  --puff-opacity: 0.48;
+  --puff-opacity: 0.78;
+}
+
+.sky-ambience--clouds-clear .sky-ambience__clouds--back .sky-ambience__puff--c,
+.sky-ambience--clouds-clear .sky-ambience__clouds--back .sky-ambience__puff--d {
+  opacity: calc(var(--puff-opacity, 0.26) * 0.55);
+}
+
+.sky-ambience--clouds-sparse .sky-ambience__clouds--back .sky-ambience__puff--d {
+  display: none;
+}
+
+.sky-ambience__rim-light {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: radial-gradient(
+    ellipse 120% 85% at 50% 18%,
+    rgba(255, 255, 255, 0.28),
+    transparent 55%
+  );
+  mix-blend-mode: soft-light;
+  pointer-events: none;
 }
 
 .sky-ambience__rain {
+  --rain-static-opacity: 0.52;
   position: absolute;
   inset: 0;
-  opacity: 0.28;
+  z-index: 6;
+  opacity: 0.58;
   background-image: repeating-linear-gradient(
-    102deg,
+    104deg,
     transparent,
-    transparent 5px,
-    rgba(255, 255, 255, 0.22) 5px,
-    rgba(255, 255, 255, 0.22) 6px
+    transparent 4px,
+    rgba(210, 230, 255, 0.55) 4px,
+    rgba(180, 205, 240, 0.75) 5px,
+    transparent 6px
   );
-  mix-blend-mode: soft-light;
+  mix-blend-mode: overlay;
   animation: sky-ambience-rain linear infinite;
 }
 
 .sky-ambience__rain--light {
-  animation-duration: 1.15s;
-  opacity: 0.22;
-}
-
-.sky-ambience__rain--heavy {
-  animation-duration: 0.55s;
-  opacity: 0.42;
+  animation-duration: 0.42s;
+  opacity: 0.52;
   background-image: repeating-linear-gradient(
-    102deg,
+    104deg,
     transparent,
-    transparent 3px,
-    rgba(255, 255, 255, 0.32) 3px,
-    rgba(255, 255, 255, 0.32) 4px
+    transparent 6px,
+    rgba(200, 220, 250, 0.5) 6px,
+    rgba(170, 200, 235, 0.65) 7px,
+    transparent 9px
   );
 }
 
+.sky-ambience__rain--heavy {
+  --rain-static-opacity: 0.72;
+  animation-duration: 0.28s;
+  opacity: 0.78;
+  background-image: repeating-linear-gradient(
+    104deg,
+    transparent,
+    transparent 2px,
+    rgba(190, 215, 255, 0.65) 2px,
+    rgba(150, 185, 230, 0.88) 3px,
+    transparent 4px
+  );
+}
+
+/* vw-based path: % alone is relative to cloud width, so clouds barely crossed the screen before. */
 @keyframes sky-ambience-drift {
   from {
-    transform: translateX(110%) scale(1);
+    transform: translate3d(100vw, 0, 0) scale(1);
   }
 
   to {
-    transform: translateX(-130%) scale(1.03);
+    transform: translate3d(calc(-100% - 20vw), 0, 0) scale(1.04);
   }
 }
 
@@ -158,19 +301,51 @@
   }
 
   to {
-    background-position: 0 28px;
+    background-position: 0 36px;
   }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .sky-ambience__puff {
     animation: none !important;
-    transform: translateX(-8%) !important;
-    opacity: calc(var(--puff-opacity, 0.22) * 0.75) !important;
+    transform: translate3d(var(--puff-static-x, 35vw), 0, 0) scale(1) !important;
+    opacity: calc(var(--puff-opacity, 0.42) * 0.92) !important;
+  }
+
+  .sky-ambience__puff--a {
+    --puff-static-x: 62vw;
+  }
+
+  .sky-ambience__puff--b {
+    --puff-static-x: 18vw;
+  }
+
+  .sky-ambience__puff--c {
+    --puff-static-x: -8vw;
+  }
+
+  .sky-ambience__puff--d {
+    --puff-static-x: 40vw;
+  }
+
+  .sky-ambience__puff--e {
+    --puff-static-x: 8vw;
+  }
+
+  .sky-ambience__puff--f {
+    --puff-static-x: 48vw;
+  }
+
+  .sky-ambience__puff--g {
+    --puff-static-x: -12vw;
+  }
+
+  .sky-ambience__puff--h {
+    --puff-static-x: 28vw;
   }
 
   .sky-ambience__rain {
     animation: none !important;
-    opacity: calc(var(--rain-static-opacity, 0.2)) !important;
+    opacity: var(--rain-static-opacity, 0.52) !important;
   }
 }

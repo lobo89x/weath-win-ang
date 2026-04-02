@@ -1,10 +1,5 @@
 <div class="weather-page">
-  <div class="weather-page__sky">
-    <app-sky-ambience-layer />
-    <div class="weather-page__current">
-      <app-current-weather [lat]="lat()" [lon]="lon()" />
-    </div>
-  </div>
+  <app-current-weather [lat]="lat()" [lon]="lon()" />
 
   <section class="weather-house" aria-labelledby="weather-house-heading">
     <div class="weather-house__roof" aria-hidden="true"></div>
@@ -12,11 +7,11 @@
 
     <div class="weather-house__facade">
       <h2 id="weather-house-heading" class="weather-house__title h6 text-uppercase mb-2 mb-md-3">
-        Through the windows
+        Seven-day Forecast
       </h2>
-      <p class="weather-house__subtitle small text-body-secondary mb-3 mb-md-4">
+      <!-- <p class="weather-house__subtitle small text-body-secondary mb-3 mb-md-4">
         Seven-day outlook framed like panes on the house.
-      </p>
+      </p> -->
       <app-weekly-forecast [lat]="lat()" [lon]="lon()" variant="house" />
     </div>
 

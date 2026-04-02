@@ -4,17 +4,6 @@
   gap: 0;
 }
 
-.weather-page__sky {
-  position: relative;
-  min-height: clamp(11rem, 32vw, 15rem);
-  padding-bottom: 0.35rem;
-}
-
-.weather-page__current {
-  position: relative;
-  z-index: 1;
-}
-
 .weather-house {
   margin-top: 1.25rem;
 }

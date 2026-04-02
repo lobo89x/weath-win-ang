@@ -1,15 +1,33 @@
 <div [ngClass]="layerClassList()" aria-hidden="true">
-  <div class="sky-ambience__clouds">
+  <!-- Back: temperature-driven sky (reads page CSS vars from TemperatureThemeService) -->
+  <div class="sky-ambience__sky"></div>
+  <!-- Soft horizon / depth -->
+  <div class="sky-ambience__haze"></div>
+  <!-- Overcast gray wash (visible on heavy cloud bands) -->
+  <div class="sky-ambience__overcast"></div>
+
+  <!-- Distant clouds: smaller, slower drift -->
+  <div class="sky-ambience__clouds sky-ambience__clouds--back">
     <span class="sky-ambience__puff sky-ambience__puff--a"></span>
     <span class="sky-ambience__puff sky-ambience__puff--b"></span>
     <span class="sky-ambience__puff sky-ambience__puff--c"></span>
     <span class="sky-ambience__puff sky-ambience__puff--d"></span>
+  </div>
+
+  <!-- Near clouds: larger, faster, higher contrast -->
+  <div class="sky-ambience__clouds sky-ambience__clouds--front">
     <span class="sky-ambience__puff sky-ambience__puff--e"></span>
     <span class="sky-ambience__puff sky-ambience__puff--f"></span>
+    <span class="sky-ambience__puff sky-ambience__puff--g"></span>
+    <span class="sky-ambience__puff sky-ambience__puff--h"></span>
   </div>
+
+  <!-- Light wrap so the scene reads even on bright skies -->
+  <div class="sky-ambience__rim-light"></div>
+
   @if (showRainHeavy()) {
-    <div class="sky-ambience__rain sky-ambience__rain--heavy"></div>
+    <div class="sky-ambience__rain sky-ambience__rain--heavy" aria-hidden="true"></div>
   } @else if (showRainLight()) {
-    <div class="sky-ambience__rain sky-ambience__rain--light"></div>
+    <div class="sky-ambience__rain sky-ambience__rain--light" aria-hidden="true"></div>
   }
 </div>
