@@ -1,4 +1,6 @@
-# Build with the correct base href for https://<user>.github.io/<repo>/
+# Custom domain (e.g. weather.leelabs756.com) is served at the site root — build with base href "/".
+# To publish for https://<user>.github.io/<repo>/ instead, set repo variable ANGULAR_BASE_HREF to /repo-name/
+# (Settings → Secrets and variables → Actions → Variables).
 # Repo Settings → Pages → Source: GitHub Actions
 name: Deploy to GitHub Pages
 
@@ -30,8 +32,11 @@ jobs:
       - name: Install
         run: npm ci
 
-      - name: Build (base href = repo name)
-        run: npx ng build --configuration production --base-href /${{ github.event.repository.name }}/
+      - name: Build (base href for custom domain or github.io)
+        run: |
+          BASE="${{ vars.ANGULAR_BASE_HREF }}"
+          if [ -z "$BASE" ]; then BASE="/"; fi
+          npx ng build --configuration production --base-href "$BASE"
 
       # GitHub Pages serves 404.html for unknown paths; copy index so client bundles still load on refresh/deep links.
       - name: SPA fallback (404.html)

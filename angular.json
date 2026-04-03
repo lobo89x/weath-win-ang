@@ -60,7 +60,7 @@
               "sourceMap": true
             },
             "github-pages": {
-              "baseHref": "/weath-win-ang/"
+              "baseHref": "/"
             }
           },
           "defaultConfiguration": "production"

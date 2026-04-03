@@ -10,7 +10,7 @@
     "test": "ng test",
     "deploy:ghpages": "npm run build:ghpages && gh-pages -d dist/weath-win-ang/browser"
   },
-  "homepage": "https://lobo89x.github.io/weath-win-ang/",
+  "homepage": "https://weather.leelabs756.com/",
   "private": true,
   "packageManager": "npm@11.12.0",
   "dependencies": {
