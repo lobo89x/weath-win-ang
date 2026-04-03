@@ -7,9 +7,11 @@
     "build": "ng build",
     "build:ghpages": "ng build --configuration=production,github-pages",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test",
-    "deploy:ghpages": "npm run build:ghpages && gh-pages -d dist/weath-win-ang/browser"
+    "test": "ng test",  
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build"
   },
+  "homepage": "https://lobo89x.github.io/weath-win-ang",
   "private": true,
   "packageManager": "npm@11.12.0",
   "dependencies": {
