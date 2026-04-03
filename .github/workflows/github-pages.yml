@@ -33,6 +33,10 @@ jobs:
       - name: Build (base href = repo name)
         run: npx ng build --configuration production --base-href /${{ github.event.repository.name }}/
 
+      # GitHub Pages serves 404.html for unknown paths; copy index so client bundles still load on refresh/deep links.
+      - name: SPA fallback (404.html)
+        run: cp dist/weath-win-ang/browser/index.html dist/weath-win-ang/browser/404.html
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -41,6 +45,9 @@ jobs:
   deploy:
     needs: build
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
